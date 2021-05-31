@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<robot name="wheelchair" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find wheelchair_witharm_description)/urdf/wheelchair_base/wheelchair_base.xacro" />
+    <xacro:include filename="$(find wheelchair_witharm_description)/urdf/sensors/2dlaser1.xacro" />
+    <xacro:include filename="$(find wheelchair_witharm_description)/urdf/sensors/2dlaser2.xacro" />
+    <xacro:include filename="$(find wheelchair_witharm_description)/urdf/sensors/2dlaser3.xacro" />
+    <!--xacro:include filename="$(find wheelchair_witharm_description)/urdf/sensors/VLP-16.urdf.xacro" /-->
+    <xacro:include filename="$(find wheelchair_witharm_description)/urdf/sensors/camera.xacro" />
+    <xacro:include filename="$(find wheelchair_witharm_description)/urdf/person/person.xacro" />
+
+<!--
+    <xacro:include filename="$(find wheelchair_witharm_description)/urdf/arm_and_gripper/gen3_robotiq_2f_85.xacro" />
+-->
+    <xacro:include filename="$(find wheelchair_witharm_description)/urdf/robot.gazebo" />
+
+
+<!-- 2dlaser1 -->
+  <joint name="2dlaser1_joint" type="fixed">
+    <origin xyz="0.60054 0.29449 0.29895" rpy="-3.1416 0 0" />
+    <parent link="base_link" />
+    <child link="2dlaser1_link" />
+  </joint>
+
+<!-- 2dlaser2 -->
+  <joint name="2dlaser2_joint" type="fixed">
+    <origin xyz="0.60054 -0.29448 0.29896" rpy="3.1416 0 0" />
+    <parent link="base_link" />
+    <child link="2dlaser2_link" />
+  </joint>
+
+<!-- 2dlaser3 -->
+  <joint name="2dlaser3_joint" type="fixed">
+    <origin xyz="-0.50189 0 0.04275" rpy="3.1416 0 3.1416" />
+    <parent link="base_link" />
+    <child link="2dlaser3_link" />
+  </joint>
+<!-- VLP16 -->
+  <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+  <VLP-16 parent="frame_link">
+    <origin xyz="0.133276057040779 0 0.022" rpy="0 0 0" />
+  </VLP-16>
+
+<!-- camera -->
+  <joint name="camera_joint" type="fixed">
+    <!--origin xyz="0.279276057040779 0 0" rpy="0 0 0" /-->
+    <origin xyz="0.2 0 0" rpy="0 0 0" />
+    <parent link="frame_link" />
+    <child link="camera_link" />
+  </joint>
+
+<!-- person -->
+  <joint name="person_joint" type="fixed">
+    <origin xyz="0.1 0 -0.25" rpy="3.14 0 1.59" />
+    <parent link="base_link" />
+    <child link="person_Link" />
+  </joint>
+    <link name="camera1_link">
+    <!--<visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.1 0.1 0.1" />
+        </geometry>
+    </visual>-->
+  </link>
+  <joint name="camera1_joint" type="fixed">
+    <origin xyz="-2 2 2" rpy="0 0.4 -0.8" />
+    <parent link="base_link" />
+    <child link="camera1_link" />
+  </joint>
+
+<!--camera-->
+  <gazebo reference="camera1_link">
+    <sensor type="camera" name="camera">
+      <update_rate>30.0</update_rate>
+      <camera name="camera">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>3653</width>
+          <height>2400</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>wheelchair/camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+</robot>
