@@ -1,0 +1,7 @@
+<launch>
+  <include file="$(find gmapping)/launch/slam_gmapping_pr2.launch"/>
+
+  <!-- Move base -->
+ <include file="$(find navigation_sim_demo)/launch/include/move_base.launch.xml"/>
+ 
+</launch>

@@ -1,0 +1,3 @@
+<launch>
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find wheelchair_witharm_description)/urdf.rviz" required="true" />
+</launch>
